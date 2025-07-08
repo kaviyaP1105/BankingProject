@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Account</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">🏦 Home</a>
+    <a href="register.html">👤 Register</a>
+    <a href="account.html">💳 Create Account</a>
+    <a href="transactions.html">📄 Transactions</a>
+  </nav>
+  <div class="container">
+    <h2>Create New Account</h2>
+    <form id="accountForm">
+      <input type="number" id="userId" placeholder="User ID" required>
+      <input type="text" id="type" placeholder="Account Type (e.g., SAVINGS)" required>
+      <input type="number" id="balance" placeholder="Initial Balance" required>
+      <button type="submit">Create Account</button>
+    </form>
+    <p id="accountResult"></p>
+  </div>
+  <script>
+    document.getElementById("accountForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const userId = document.getElementById("userId").value;
+      const type = document.getElementById("type").value;
+      const balance = document.getElementById("balance").value;
+      fetch("http://localhost:8080/accounts/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, type, balance })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("accountResult").textContent =
+          `✅ Account Created: ${data.accountType} with ₹${data.balance}`;
+      });
+    });
+  </script>
+</body>
+</html>

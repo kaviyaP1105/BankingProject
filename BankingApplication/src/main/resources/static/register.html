@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register User</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <a href="index.html">🏦 Home</a>
+    <a href="register.html">👤 Register</a>
+    <a href="account.html">💳 Create Account</a>
+    <a href="transactions.html">📄 Transactions</a>
+  </nav>
+  <div class="container">
+    <h2>Register New User</h2>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <button type="submit">Register</button>
+    </form>
+    <p id="registerResult"></p>
+  </div>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      fetch("http://localhost:8080/users/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("registerResult").textContent =
+          `✅ Registered: ${data.name} (${data.email})`;
+      });
+    });
+  </script>
+</body>
+</html>

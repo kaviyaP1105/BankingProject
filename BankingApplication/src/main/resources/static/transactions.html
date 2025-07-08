@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Transactions</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <a href="index.html">🏦 Home</a>
+    <a href="register.html">👤 Register</a>
+    <a href="account.html">💳 Create Account</a>
+    <a href="transactions.html">📄 Transactions</a>
+  </nav>
+
+  <div class="container">
+    <h2>Bank Transactions</h2>
+    
+    <!-- Input for Account ID -->
+    <input type="number" id="accountId" placeholder="Enter Account ID" required />
+
+    <!-- View Balance -->
+    <button onclick="viewBalance()">🔍 View Balance</button>
+    <p id="balanceOutput"></p>
+
+    <!-- Withdraw -->
+    <h3>Withdraw Amount</h3>
+    <input type="number" id="withdrawAmount" placeholder="Amount to Withdraw" />
+    <button onclick="withdraw()">💸 Withdraw</button>
+    <p id="withdrawOutput"></p>
+
+    <!-- Deposit -->
+    <h3>Deposit Amount</h3>
+    <input type="number" id="depositAmount" placeholder="Amount to Deposit" />
+    <button onclick="deposit()">💰 Deposit</button>
+    <p id="depositOutput"></p>
+  </div>
+
+  <script>
+  function viewBalance() {
+	  const accountId = document.getElementById("accountId").value;
+	  fetch(`http://localhost:8080/accounts/${accountId}`)
+	    .then(res => res.json())
+	    .then(data => {
+	      document.getElementById("balanceOutput").textContent = `✅ Balance: ₹${data.balance}`;
+	    })
+	    .catch(err => alert("❌ Failed to fetch balance"));
+	}
+
+
+    function withdraw() {
+      const accountId = document.getElementById("accountId").value;
+      const amount = document.getElementById("withdrawAmount").value;
+      fetch(`http://localhost:8080/accounts/withdraw?accountId=${accountId}&amount=${amount}`, {
+        method: "POST"
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("withdrawOutput").textContent = `✅ Withdrawn ₹${amount}. New Balance: ₹${data.balance}`;
+        viewBalance();
+      })
+      .catch(err => alert("❌ Withdrawal failed. Check balance or account ID."));
+    }
+
+    function deposit() {
+      const accountId = document.getElementById("accountId").value;
+      const amount = document.getElementById("depositAmount").value;
+      fetch(`http://localhost:8080/accounts/deposit?accountId=${accountId}&amount=${amount}`, {
+        method: "POST"
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("depositOutput").textContent = `✅ Deposited ₹${amount}. New Balance: ₹${data.balance}`;
+        viewBalance();
+      })
+      .catch(err => alert("❌ Deposit failed. Check account ID."));
+    }
+  </script>
+</body>
+</html>
